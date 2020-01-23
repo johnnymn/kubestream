@@ -17,6 +17,8 @@ const (
 	defaultService          = "registry"
 )
 
+var kubeconfig string
+
 // InstallCommand checks if the cluster is
 // running the resources we need to execute
 // kubestream deployments.
@@ -28,13 +30,12 @@ const (
 //   the registry to kubestream and allow pushing images from
 //   the local machine using k8s port forwarding capabilities.
 var InstallCommand = &cobra.Command{
-	Use:   "install",
-	Short: "Bootstrap the resources we need to run Kubestream in your k8s cluster",
-
+	Use:     "install",
+	Short:   "Bootstrap the resources we need to run Kubestream in your k8s cluster",
 	Example: `kubestream install`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Get a k8s ClientSet
-		cs, err := util.GetClientSet()
+		cs, err := util.GetClientSet(kubeconfig)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "error creating k8s client: "+err.Error())
 			os.Exit(1)
@@ -42,4 +43,8 @@ var InstallCommand = &cobra.Command{
 
 		spew.Dump(cs)
 	},
+}
+
+func init() {
+	InstallCommand.Flags().StringVarP(&kubeconfig, "kubeconfig", "k", "", "path to the kubeconfig file (optional)")
 }

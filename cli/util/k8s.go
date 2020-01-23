@@ -1,7 +1,6 @@
 package util
 
 import (
-	"flag"
 	"path/filepath"
 
 	k8s "k8s.io/client-go/kubernetes"
@@ -12,18 +11,13 @@ import (
 // GetClientSet Returns a k8s Clientset
 // object that we can use to instantiate
 // the clients for all the specific APIs.
-func GetClientSet() (*k8s.Clientset, error) {
-	var kubeconfig *string
-
-	if home := homedir.HomeDir(); home != "" {
-		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
-	} else {
-		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
+func GetClientSet(kubeconfig string) (*k8s.Clientset, error) {
+	home := homedir.HomeDir()
+	if kubeconfig == "" && home != "" {
+		kubeconfig = filepath.Join(home, ".kube", "config")
 	}
 
-	flag.Parse()
-
-	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
+	config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
 	if err != nil {
 		return &k8s.Clientset{}, err
 	}
