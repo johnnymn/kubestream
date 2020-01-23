@@ -1,6 +1,6 @@
 package main
 
-import "github.com/relingan/kubestream/cmd"
+import "github.com/relingan/kubestream/cli"
 
 func main() {
 	cmd.Execute()
