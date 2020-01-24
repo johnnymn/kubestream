@@ -5,8 +5,11 @@ default: test
 release:
 	goreleaser
 
-build:
+snapshot:
 	goreleaser --snapshot --skip-publish --rm-dist
+
+build:
+	go build -mod vendor
 
 fmt:
 	gofmt -w $(GOFMT_FILES)
