@@ -31,6 +31,7 @@ RUN apt-get update \
         github.com/stamblerre/gocode \
         github.com/rogpeppe/godef \
         github.com/sqs/goreturns \
+        github.com/markbates/pkger/cmd/pkger \
         github.com/go-delve/delve/cmd/dlv 2>&1 \
     #
     # Create a non-root user to use if preferred

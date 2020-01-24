@@ -10,13 +10,15 @@
     "terminal.integrated.shell.linux": "/bin/bash",
     "go.gopath": "/go",
     "go.useLanguageServer": true,
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "go.lintTool": "golangci-lint"
   },
   "extensions": [
     "ms-vscode.go",
     "technosophos.vscode-make",
     "editorconfig.editorconfig",
     "streetsidesoftware.code-spell-checker",
-    "eamodio.gitlens"
+    "eamodio.gitlens",
+    "ipedrazas.kubernetes-snippets"
   ]
 }

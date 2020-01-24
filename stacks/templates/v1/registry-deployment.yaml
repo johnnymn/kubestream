@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registry
+  namespace: kubestream
+  labels:
+    name: registry
+spec:
+  selector:
+    matchLabels:
+      app: registry
+  template:
+    metadata:
+      labels:
+        app: registry
+    spec:
+      containers:
+        - image: registry:2
+          name: registry
+          env:
+            - name: REGISTRY_HTTP_ADDR
+              value: 0.0.0.0:80
+          ports:
+            - containerPort: 80
+              name: registry
+          volumeMounts:
+            - mountPath: /var/lib/registry
+              name: kubestream-registry
+      volumes:
+        - name: kubestream-registry
+          hostPath:
+            path: /var/lib/registry

@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: registry
+  namespace: kubestream
+spec:
+  selector:
+    app: registry
+  type: ClusterIP
+  ports:
+    - name: registry
+      port: 80
+      targetPort: 80
