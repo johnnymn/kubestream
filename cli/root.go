@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/relingan/kubestream/cli/commands/build"
 	"github.com/relingan/kubestream/cli/commands/install"
 	"github.com/spf13/cobra"
 )
@@ -29,5 +30,6 @@ func Execute() {
 }
 
 func init() {
+	rootCmd.AddCommand(build.BuildCommand)
 	rootCmd.AddCommand(install.InstallCommand)
 }
