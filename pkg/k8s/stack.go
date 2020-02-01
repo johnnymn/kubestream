@@ -9,7 +9,8 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/dynamic"
 	k8s "k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/restmapper")
+	"k8s.io/client-go/restmapper"
+)
 
 // This helper function iterates through a map
 // of stacks.Object, checks if they exists in
@@ -18,10 +19,13 @@ import (
 // we want to use to make the API calls.
 func DeployStack(
 	objects map[int]stacks.Object,
+	namespace string,
 	dynClient dynamic.Interface,
 	clientSet *k8s.Clientset) error {
 
-	for _, obj := range objects {
+	for i := 0; i < len(objects); i++ {
+		obj := objects[i]
+
 		gk := schema.GroupKind{
 			Group: obj.GroupVersionKind.Group,
 			Kind:  obj.GroupVersionKind.Kind,
@@ -48,10 +52,31 @@ func DeployStack(
 		}
 		unstructured := unstructured.Unstructured{Object: uns}
 
+		// If the unstructured object has a default
+		// namespace attached that means the object
+		// is namespaced.
+		ns := unstructured.GetNamespace()
+
+		// And if the namespace argument is not empty
+		// we use it instead of the default.
+		if ns != "" && namespace != "" {
+			ns = namespace
+			unstructured.SetNamespace(namespace)
+		}
+
+		// IMPORTANT: A really edgy case happens when we have
+		// to create a namespace, which is not a namespaced object,
+		// but that we need to rename if we want to substitute the
+		// defaults. Given that all Kubestream resources are contained
+		// in a single namespace for a given installation we can solve
+		// it like this:
+		if ns == "" && namespace != "" && unstructured.GetKind() == "Namespace" {
+			unstructured.SetName(namespace)
+		}
+
 		// We don't care about the resulting
 		// object as long as the operation
 		// succeeds.
-		ns := unstructured.GetNamespace()
 		if ns != "" {
 			_, err = dynClient.
 				Resource(mapping.Resource).

@@ -13,7 +13,7 @@ const (
 	v1Stack = "v1"
 )
 
-var kubeconfig string
+var kubeconfig, namespace string
 
 // InstallCommand checks if the cluster is
 // running the resources we need to execute
@@ -50,7 +50,7 @@ var InstallCommand = &cobra.Command{
 			os.Exit(1)
 		}
 
-		err = k8s.DeployStack(stack, *dynClient, clientSet)
+		err = k8s.DeployStack(stack, namespace, *dynClient, clientSet)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "error deploying stack: "+err.Error())
 			os.Exit(1)
@@ -62,4 +62,5 @@ var InstallCommand = &cobra.Command{
 
 func init() {
 	InstallCommand.Flags().StringVarP(&kubeconfig, "kubeconfig", "k", "", "path to the kubeconfig file (optional)")
+	InstallCommand.Flags().StringVarP(&namespace, "namespace", "n", "", "namespace to use for kubestream installation (optional)")
 }
