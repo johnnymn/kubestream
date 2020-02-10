@@ -3,6 +3,7 @@ module github.com/relingan/kubestream
 go 1.13
 
 require (
+	github.com/apex/log v1.1.2
 	github.com/imdario/mergo v0.3.8 // indirect
 	github.com/markbates/pkger v0.14.0
 	github.com/spf13/cobra v0.0.5
